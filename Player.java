@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import AlgorithmByBai.Choice;
 
  interface FinalTest {
 	public void change(List<Card> handCard);
@@ -25,6 +24,7 @@ public class Player implements FinalTest
 	 		  case 2:s+='♣';break;
 	 		  case 3:s+='♦';break;
 	 		  case 4:s+='♠';break;
+			  default:
 	 		  }
 	 		  switch(c.rank)
 	 		  {
@@ -40,62 +40,63 @@ public class Player implements FinalTest
 	 }
 	public array arr=new array();
 	public void arrange(List<Card> handCard)
+	{
+	   arr.ranknum1.clear();
+	   arr.ranknum2.clear();
+	   arr.ranknum3.clear();
+	   arr.ranknum4.clear();
+	   arr.typenum1.clear();
+	   arr.typenum2.clear();
+	   arr.typenum3.clear();
+	   arr.typenum4.clear();
+	   for(int i=0;i<handCard.size();i++)
 	   {
-		   arr.ranknum1.clear();
-		   arr.ranknum2.clear();
-		   arr.ranknum3.clear();
-		   arr.ranknum4.clear();
-		   arr.typenum1.clear();
-		   arr.typenum2.clear();
-		   arr.typenum3.clear();
-		   arr.typenum4.clear();
-		   for(int i=0;i<handCard.size();i++)
-		   { 
-			   if((i+1)<handCard.size()&&handCard.get(i).rank==handCard.get(i+1).rank)
-				   if((i+2)<handCard.size()&&handCard.get(i).rank==handCard.get(i+2).rank)
-					   if((i+3)<handCard.size()&&handCard.get(i).rank==handCard.get(i+3).rank)    //四张相同的牌
-					   {
-						   arr.ranknum4.addAll(handCard.subList(i,i+4));
-						   i+=3;
-					   }
-					   else                                               //三张相同的牌
-					   {
-						   arr.ranknum3.addAll(handCard.subList(i,i+3));
-						   i+=2;
-					   }
-				   else                                   //两张相同的牌
+		   if((i+1)<handCard.size()&&handCard.get(i).rank==handCard.get(i+1).rank)
+			   if((i+2)<handCard.size()&&handCard.get(i).rank==handCard.get(i+2).rank)
+				   if((i+3)<handCard.size()&&handCard.get(i).rank==handCard.get(i+3).rank)    //四张相同的牌
 				   {
-					   arr.ranknum2.addAll(handCard.subList(i,i+2));
-					   i+=1;
+					   arr.ranknum4.addAll(handCard.subList(i,i+4));
+					   i+=3;
 				   }
-			   else                                  //没有相同的牌
+				   else                                               //三张相同的牌
+				   {
+					   arr.ranknum3.addAll(handCard.subList(i,i+3));
+					   i+=2;
+				   }
+			   else                                   //两张相同的牌
 			   {
-				   arr.ranknum1.add(handCard.get(i));
+				   arr.ranknum2.addAll(handCard.subList(i,i+2));
+				   i+=1;
 			   }
-			}   
-		   for(int i=0;i<handCard.size();i++)
+		   else                                  //没有相同的牌
 		   {
-			   switch(handCard.get(i).type)
-			   {
-			   case 1:arr.typenum1.add(handCard.get(i));break;
-			   case 2:arr.typenum2.add(handCard.get(i));break;
-			   case 3:arr.typenum3.add(handCard.get(i));break;
-			   case 4:arr.typenum4.add(handCard.get(i));break;
-			   }
-		    }
-	   }
+			   arr.ranknum1.add(handCard.get(i));
+		   }
+		}
+	   for(int i=0;i<handCard.size();i++)
+	   {
+		   switch(handCard.get(i).type)
+		   {
+		   case 1:arr.typenum1.add(handCard.get(i));break;
+		   case 2:arr.typenum2.add(handCard.get(i));break;
+		   case 3:arr.typenum3.add(handCard.get(i));break;
+		   case 4:arr.typenum4.add(handCard.get(i));break;
+		   default:
+		   }
+		}
+	}
 	  
 	public Choice tochoice(List<Card> handCard)
-	   {
-		   Choice choice=new Choice();
-		   for(int i=0;i<3;i++)
-			   choice.head.add(handCard.get(i));
-		   for(int i=3;i<8;i++)
-			   choice.mid.add(handCard.get(i));
-		   for(int i=8;i<13;i++)
-			   choice.end.add(handCard.get(i));
-		   return choice;
-	   }
+	{
+		Choice choice=new Choice();
+		for(int i=0;i<3;i++)
+		   choice.head.add(handCard.get(i));
+		for(int i=3;i<8;i++)
+		   choice.mid.add(handCard.get(i));
+		for(int i=8;i<13;i++)
+		   choice.end.add(handCard.get(i));
+		return choice;
+	}
 
 	public boolean iscontinuous(List<Card> sub)
 	   {
@@ -109,15 +110,15 @@ public class Player implements FinalTest
 	public void change(List<Card> handCard)
 	   {
 		   Collections.sort(handCard,new Comparator<Card>()          //从小到大排序
+	   {
+		   public int compare(Card c1, Card c2)
 		   {
-			   public int compare(Card c1, Card c2) 
-			   {  
-				   int i = c1.rank - c2.rank;  
-				   if(i == 0)  
-					   return c1.type - c2.type;    
-				   return i;
-				}   
-			});
+			   int i = c1.rank - c2.rank;
+			   if(i == 0)
+				   return c1.type - c2.type;
+			   return i;
+		   }
+	   });
 		   arrange(handCard);        //将牌整理到arr中
 		   
 		   if(arr.typenum4.size()==13||arr.typenum1.size()==13||arr.typenum2.size()==13||arr.typenum3.size()==13)            //至尊青龙
@@ -138,7 +139,7 @@ public class Player implements FinalTest
 			   choice.headType="shierhuangzu";
 			   return;
 		   }
-		   
+
 		   List<Card> continuous1=new ArrayList<Card>();                 //三同花顺
 		   List<Card> continuous2=new ArrayList<Card>();
 		   int t=-1,f1=-1;
@@ -340,13 +341,14 @@ public class Player implements FinalTest
 		   for(int i=1;i<5&&th1!=-1&&th2!=-1;i++)
 			   if(typen[i]==3)
 			   {
-				   List<Card>type=new ArrayList<Card>();
+				   List<Card> type=new ArrayList<>();
 				   switch(i)
 				   {
 				   case 1:type=arr.typenum1;break;
 				   case 2:type=arr.typenum2;break;
 				   case 3:type=arr.typenum3;break;
 				   case 4:type=arr.typenum4;break;
+				   default:
 				   }
 				   choice.head.addAll(type);
 				   switch(th1)
@@ -355,6 +357,7 @@ public class Player implements FinalTest
 				   case 2:type=arr.typenum2;break;
 				   case 3:type=arr.typenum3;break;
 				   case 4:type=arr.typenum4;break;
+				   default:
 				   }
 				   choice.mid.addAll(type);
 				   switch(th2)
@@ -363,6 +366,7 @@ public class Player implements FinalTest
 				   case 2:type=arr.typenum2;break;
 				   case 3:type=arr.typenum3;break;
 				   case 4:type=arr.typenum4;break;
+				   default:
 				   }
 				   if(choice.mid.get(4).rank>type.get(4).rank)
 				   {
@@ -491,6 +495,7 @@ public class Player implements FinalTest
 					  case 2:type=arr.typenum2;break;
 					  case 3:type=arr.typenum3;break;
 					  case 4:type=arr.typenum4;break;
+					  default:
 					  }
 					   choice.mid.addAll(type);
 					   card.removeAll(choice.mid);
@@ -506,6 +511,7 @@ public class Player implements FinalTest
 						  case 2:type=arr.typenum2;break;
 						  case 3:type=arr.typenum3;break;
 						  case 4:type=arr.typenum4;break;
+						  default:
 					  }
 					   if(!arr.ranknum3.isEmpty())
 					   {
@@ -597,7 +603,7 @@ public class Player implements FinalTest
 				   choice.headType="yidui";
 				   return;
 			   }
-			   
+
 			   if(arr.ranknum2.size()==4||arr.ranknum2.size()==2)
 			   {
 				   choice.mid.addAll(arr.ranknum2.subList(arr.ranknum2.size()-2, arr.ranknum2.size()));
@@ -746,6 +752,7 @@ public class Player implements FinalTest
 					   case 2:type=arr.typenum2;break;
 					   case 3:type=arr.typenum3;break;
 					   case 4:type=arr.typenum4;break;
+					   default:
 					   }
 					   choice.mid.addAll(type.subList(0, 5));
 					   card.removeAll(choice.mid);
@@ -777,6 +784,7 @@ public class Player implements FinalTest
 					   case 2:type=arr.typenum2;break;
 					   case 3:type=arr.typenum3;break;
 					   case 4:type=arr.typenum4;break;
+					   default:
 					   }
 					   if(!arr.ranknum3.isEmpty())
 					   {
@@ -965,6 +973,7 @@ public class Player implements FinalTest
 				   case 2:type=arr.typenum2;break;
 				   case 3:type=arr.typenum3;break;
 				   case 4:type=arr.typenum4;break;
+				   default:
 				   }
 				   if(typen[i]==5)                                    //中道为同花
 				   {
@@ -1084,6 +1093,7 @@ public class Player implements FinalTest
 			   case 2:type1=arr.typenum2;break;
 			   case 3:type1=arr.typenum3;break;
 			   case 4:type1=arr.typenum4;break;
+			   default:
 			   }
 			   switch(th2)
 			   {
@@ -1091,6 +1101,7 @@ public class Player implements FinalTest
 			   case 2:type2=arr.typenum2;break;
 			   case 3:type2=arr.typenum3;break;
 			   case 4:type2=arr.typenum4;break;
+			   default:
 			   }
 			   if(type1.get(type1.size()-1).rank>type2.get(type2.size()-1).rank)
 			   {
@@ -1117,6 +1128,7 @@ public class Player implements FinalTest
 			   case 2:type1=arr.typenum2;break;
 			   case 3:type1=arr.typenum3;break;
 			   case 4:type1=arr.typenum4;break;
+			   default:
 			   }
 			   if(type1.size()==5)
 				   choice.end.addAll(type1);
@@ -1280,7 +1292,7 @@ public class Player implements FinalTest
 			   choice.midType="wulong";
 			   return;
 		   }
-		   
+
 		   if(arr.ranknum2.size()>2)
 		   {
 			   choice.end.addAll(arr.ranknum2.subList(arr.ranknum2.size()-4, arr.ranknum2.size()));
@@ -1292,11 +1304,17 @@ public class Player implements FinalTest
 				   choice.mid.add(arr.ranknum1.get(1));
 				   choice.midType="liangdui";
 			   }
-			   else if(arr.ranknum2.size()>=6)
+			   else if (arr.ranknum2.size() == 8)
+               {
+                   choice.mid.addAll(arr.ranknum2.subList(0, 4));
+                   choice.mid.add(arr.ranknum1.get(1));
+                   choice.midType="liangdui";
+               }
+			   else if(arr.ranknum2.size()==6)
 			   {
-				   choice.mid.addAll(arr.ranknum2.subList(2, 4));
+				   choice.mid.addAll(arr.ranknum2.subList(0, 2));
 				   choice.mid.addAll(arr.ranknum1.subList(1, 4));
-				   choice.midType="liangdui";
+				   choice.midType="yidui";
 			   }
 			   else if(arr.ranknum2.size()==4)
 			   {
@@ -1304,9 +1322,16 @@ public class Player implements FinalTest
 				   choice.mid.addAll(arr.ranknum1.subList(0, 2));
 				   choice.midType="wulong";
 			   }
-			   card.removeAll(choice.end);
-			   card.removeAll(choice.mid);
-			   choice.head.addAll(card);
+//               System.out.println(toString(choice.mid));
+//               System.out.println(toString(choice.end));
+//			   card.removeAll(choice.end);
+//			   card.removeAll(choice.mid);
+//			   choice.head.addAll(card);
+//
+//
+//               System.out.println(choice.headType);
+//               System.out.println(choice.midType);
+//               System.out.println(choice.endType);
 			   return;
 		   }
 	   }
