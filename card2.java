@@ -1,3 +1,4 @@
+package AlgorithmByBai;
 public class Card {
     int type;
     int rank;
@@ -7,18 +8,18 @@ public class Card {
         this.rank = rank;
     }
 
-    public Card(String s){
-        s = s.toUpperCase();
-        if (s.charAt(0) == '*')
+    public Card(String cardString){
+        cardString = cardString.toUpperCase();
+        if (cardString.charAt(0) == '*')
             type = 2;
-        else if (s.charAt(0) == '#')
+        else if (cardString.charAt(0) == '#')
             type = 3;
-        else if (s.charAt(0) == '$')
+        else if (cardString.charAt(0) == '$')
             type = 4;
-        else if (s.charAt(0) == '&')
+        else if (cardString.charAt(0) == '&')
             type = 1;
 
-        switch (s.charAt(1)){
+        switch (cardString.charAt(1)){
             case '2':
                 rank = 1;
                 break;
@@ -58,6 +59,7 @@ public class Card {
             case 'A':
                 rank = 13;
                 break;
+            default:
 
         }
 
@@ -96,6 +98,7 @@ public class Card {
             case 4:
                 s += '$';
                 break;
+            default:
         }
         switch (rank){
             case 1:
@@ -120,7 +123,7 @@ public class Card {
                 break;
             case 13:
                 s += 'A';
-
+            default:
         }
         return s;
     }
